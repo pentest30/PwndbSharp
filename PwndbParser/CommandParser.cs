@@ -81,7 +81,7 @@ namespace PwndbParser
             }
         }
 
-        private static async Task WriteResultsToFileAsync(string outputFile, List<string> listOfPasswords, string fName)
+        private static async Task WriteResultsToFileAsync(string outputFile, List<string> list, string fName)
         {
             var curDir = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
             var filePath = outputFile != null
@@ -89,7 +89,7 @@ namespace PwndbParser
                 : curDir + Path.DirectorySeparatorChar + fName;
             await using (StreamWriter file = new StreamWriter(filePath))
             {
-                foreach (string line in listOfPasswords.Skip(1))
+                foreach (string line in list.Skip(1))
                     await file.WriteLineAsync(line).ConfigureAwait(false);
             }
         }
