@@ -31,7 +31,6 @@ namespace PwndbParser
             CancellationToken token = cts.Token;
             cts.CancelAfter(timeOut?? 60000);
             token.ThrowIfCancellationRequested();
-            token.ThrowIfCancellationRequested();
             var task = Task.Run(async () =>
             {
                 var result = await PostQueryAsync(domain, userName, torPort).ConfigureAwait(false);
@@ -64,7 +63,7 @@ namespace PwndbParser
                         if (!s1.Contains("=>")) 
                             continue;
                         if (s1.Split("=>")[0].Contains("password"))
-                            listOfPasswords.Add(s1.Split("=>")[1]);
+                            listOfPasswords.Add(s1.Split("=>")[1].Trim());
                         if (s1.Split("=>")[0].Contains("luser"))
                             lastUser = s1.Split("=>")[1];
                         if (s1.Split("=>")[0].Contains("domain"))
