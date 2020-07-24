@@ -14,6 +14,10 @@ namespace PwndbParser
 {
     public class CommandParser
     {
+        private const int DEFAUlT_PORT = 9150;
+        private const string DEFAUlT_LOCAL_IP = "127.0.0.1";
+        private const string PWNDB_URl = "http://pwndb2am4tzkvold.onion/";
+
         [Command(Name = "pwndb")]
         public async Task<int> ParseAsync(
             [Operand(Name = "d",Description = "Domain name")]
@@ -62,11 +66,11 @@ namespace PwndbParser
                     {
                         if (!s1.Contains("=>")) 
                             continue;
-                        if (s1.Split("=>")[0].Contains("password"))
+                        if  (s1.Split("=>")[0].Contains("password"))
                             listOfPasswords.Add(s1.Split("=>")[1].Trim());
-                        if (s1.Split("=>")[0].Contains("luser"))
+                        else if (s1.Split("=>")[0].Contains("luser"))
                             lastUser = s1.Split("=>")[1];
-                        if (s1.Split("=>")[0].Contains("domain"))
+                        else if (s1.Split("=>")[0].Contains("domain"))
                             listOfEmails.Add(lastUser+"@" + s1.Split("=>")[1].Trim());
                         Console.WriteLine(s1);
                     }
@@ -84,7 +88,7 @@ namespace PwndbParser
         {
             var curDir = Path.GetDirectoryName(Assembly.GetEntryAssembly()?.Location);
             var filePath = outputFile != null
-                ? curDir + Path.DirectorySeparatorChar + outputFile
+                ? curDir + Path.DirectorySeparatorChar + outputFile + "_" + fName
                 : curDir + Path.DirectorySeparatorChar + fName;
             await using (StreamWriter file = new StreamWriter(filePath))
             {
@@ -95,8 +99,7 @@ namespace PwndbParser
 
         private static async Task<HttpResponseMessage> PostQueryAsync(string domain, string userName, int? port)
         {
-            var socksProxy = new Socks5ProxyClient("127.0.0.1", port ?? 9150);
-            var url = "http://pwndb2am4tzkvold.onion/";
+            var socksProxy = new Socks5ProxyClient(DEFAUlT_LOCAL_IP, port ?? DEFAUlT_PORT);
             var handler = new ProxyHandler(socksProxy);
             var httpClient = new HttpClient(handler);
             var data = new FormUrlEncodedContent(new[]
@@ -110,7 +113,7 @@ namespace PwndbParser
             try
             {
                 Console.WriteLine("Connecting to pwndb service on tor network...\n");
-                var result = await httpClient.PostAsync(url, data).ConfigureAwait(false);
+                var result = await httpClient.PostAsync(PWNDB_URl, data).ConfigureAwait(false);
                 return result;
 
             }
