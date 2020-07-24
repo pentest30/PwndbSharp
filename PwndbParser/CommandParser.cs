@@ -21,9 +21,9 @@ namespace PwndbParser
             [Option(ShortName = "u", Description = "Username")]
             string userName,
             [Option(ShortName = "t", Description = "Time out -default 60 000 milliseconds")]
-            int? torPort,
-            [Option(ShortName = "p", Description = "Tor port - default port : 9150")]
             int? timeOut,
+            [Option(ShortName = "p", Description = "Tor port - default port : 9150")]
+            int? torPort,
             [Option(ShortName = "o", Description = "Output file")]
             string outputFile)
         {
@@ -67,7 +67,7 @@ namespace PwndbParser
                         if (s1.Split("=>")[0].Contains("luser"))
                             lastUser = s1.Split("=>")[1];
                         if (s1.Split("=>")[0].Contains("domain"))
-                            listOfEmails.Add(lastUser+"@" + s1.Split("=>")[1].TrimStart());
+                            listOfEmails.Add(lastUser+"@" + s1.Split("=>")[1].Trim());
                         Console.WriteLine(s1);
                     }
                 }
