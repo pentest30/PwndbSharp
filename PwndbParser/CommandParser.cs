@@ -14,9 +14,9 @@ namespace PwndbParser
 {
     public class CommandParser
     {
-        private const int DEFAUlT_PORT = 9150;
-        private const string DEFAUlT_LOCAL_IP = "127.0.0.1";
-        private const string PWNDB_URl = "http://pwndb2am4tzkvold.onion/";
+        private const int DEFAULT_PORT = 9150;
+        private const string DEFAULT_LOCAL_IP = "127.0.0.1";
+        private const string PWNDB_URL = "http://pwndb2am4tzkvold.onion/";
 
         [Command(Name = "pwndb")]
         public async Task<int> ParseAsync(
@@ -99,7 +99,7 @@ namespace PwndbParser
 
         private static async Task<HttpResponseMessage> PostQueryAsync(string domain, string userName, int? port)
         {
-            var socksProxy = new Socks5ProxyClient(DEFAUlT_LOCAL_IP, port ?? DEFAUlT_PORT);
+            var socksProxy = new Socks5ProxyClient(DEFAULT_LOCAL_IP, port ?? DEFAULT_PORT);
             var handler = new ProxyHandler(socksProxy);
             var httpClient = new HttpClient(handler);
             var data = new FormUrlEncodedContent(new[]
@@ -113,7 +113,7 @@ namespace PwndbParser
             try
             {
                 Console.WriteLine("Connecting to pwndb service on tor network...\n");
-                var result = await httpClient.PostAsync(PWNDB_URl, data).ConfigureAwait(false);
+                var result = await httpClient.PostAsync(PWNDB_URL, data).ConfigureAwait(false);
                 return result;
 
             }
